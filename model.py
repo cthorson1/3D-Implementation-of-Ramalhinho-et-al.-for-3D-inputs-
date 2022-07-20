@@ -1,7 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras import datasets, layers, models, callbacks
-import keras.optimizers
-import keras.losses
+from keras import datasets, layers, models, callbacks, optimizers, losses
 
 class TripletLoss:
     # Basis for code pulled from "Deep triplet hashing network for case based medical image retrieval",
@@ -9,7 +7,7 @@ class TripletLoss:
     def __init__(self, margin=0.5):
         super(TripletLoss, self).__init__()
         self.margin = margin  # margin threshold
-        self.mse_loss = keras.losses.mean_squared_error(reduction='none')
+        self.mse_loss = losses.mean_squared_error(reduction='none')
 
     def forward(self, bq, bp, bn):
         margin_val = self.margin * bq.shape[1]
@@ -23,7 +21,7 @@ class Network:
     def __init__(self, shape=(67,1,64,128,128)):
         self.hash_bits = hash_bits
         self.model = self.triplets_model(shape, dimensions)
-        self.compile = self.model.compile(optimizer = tf.keras.optimizers.adam_v2.Adam(lr=1e-4),
+        self.compile = self.model.compile(optimizer = optimizers.adam_v2.Adam(lr=1e-4),
                            metrics=['accuracy'])
         # Need to properly incorporate loss into above
         self.fit = self.model.fit
